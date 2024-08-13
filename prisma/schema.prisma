@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+enum AppointmentStatus {
+  Validated
+  Canceled
+  Refused
+  Waiting
+}
+
+enum AppointmentShift {
+  Morning
+  Afternoon
+  Fullday
+}
+
+enum Status {
+  Enable
+  Disable
+}
+
+// Définition du modèle Client
+model Profiles {
+  id  String      @id @db.Uuid
+  email       String @unique
+  first_name  String
+  last_name   String
+  phone_number String
+  role        String   @default("user")
+  status      Status  @default(Enable)
+  email_confirmed_at String? 
+  appointments Appointment[]
+  cars        Car[]
+  createdAt DateTime @default(now())
+  
+  @@map("profiles")
+}
+
+model Service {
+  id_service  Int      @id @default(autoincrement())
+  name        String
+  worktime    Int
+  status      Status   @default(Enable)
+  appointments AppointmentHasService[]
+  id_category  Int
+  category    Category @relation(fields: [id_category], references: [id_category])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime? @updatedAt 
+}
+
+model Category {
+  id_category Int      @id @default(autoincrement())
+  name        String
+  status      Status   @default(Enable)
+  position    Int  @default(9)
+  services    Service[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime? @updatedAt 
+}
+
+model Planning {
+  id_planning Int      @id @default(autoincrement())
+  daydate     DateTime @unique
+  morning     Int @default(0)
+  afternoon   Int @default(0)
+  maxShift Int 
+  appointments Appointment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+// Définition du modèle Appointment
+model Appointment {
+  id_appointment Int       @id @default(autoincrement())
+  id_planning    Int
+  id_profile      String @db.Uuid
+  id_car         Int 
+  status         AppointmentStatus @default(Waiting)
+  shift          AppointmentShift
+  comment        String? @db.VarChar(1000)    
+  planning       Planning @relation(fields: [id_planning], references: [id_planning])
+  profile        Profiles   @relation(fields: [id_profile], references: [id], onDelete: Cascade)
+  car            Car                      @relation(fields: [id_car], references: [id_car])
+  services       AppointmentHasService[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+// Définition du modèle Car
+model Car {
+  id_car    Int    @id @default(autoincrement())
+  model     String
+  plate     String
+  brand     String
+  id_profile String @db.Uuid
+  profile    Profiles @relation(fields: [id_profile], references: [id], onDelete: Cascade)
+  appointments   Appointment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+// Définition du modèle AppointmentHasService
+model AppointmentHasService {
+  id_appointment_has_service    Int    @id @default(autoincrement())
+  id_service     Int          
+  id_appointment Int          
+  service        Service      @relation(fields: [id_service], references: [id_service], onDelete: Cascade)
+  appointment    Appointment  @relation(fields: [id_appointment], references: [id_appointment], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@unique([id_service, id_appointment]) 
+}
+
+model DefaultSettings {
+  id_defaultSettings Int      @id @default(autoincrement())
+  limitShift     Int @default(2)
+  monday   String? 
+  tuesday   String?
+  wednesday   String?
+  thursday   String?
+  friday   String?
+  saturday  String?
+  sunday   String?
+  garage_name String?
+  address  String?
+  zip_code  String?
+  city   String?
+  coordonate_x  String?
+  coordonate_y  String?
+  email  String?
+  landline_phone  String?
+  cell_phone String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}

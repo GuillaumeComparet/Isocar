@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.light {
+  --background: #f3f4f6;
+  --background-opacity: #e5e7eb;
+  --btn-background: #d1d5db;
+  --btn-background-hover: #9ca3af;
+  --foreground: #030712;
+  --hover: #f97316;
+  --highlight: #ea580c;
+  --text-content-background: #374151;
+  --cancel: #ef4444;
+  --cancel-hover: #dc2626;
+}
+
+.dark {
+  --background: #030712;
+  --background-opacity: #111827;
+  --btn-background: #1f2937;
+  --btn-background-hover: #374151;
+  --foreground: #f9fafb;
+  --hover: #f97316;
+  --highlight: #f97316;
+  --text-content-background: #4b5563;
+  --cancel: #dc2626;
+  --cancel-hover: #ef4444;
+}
+
+/* * MARK: Global styles */
+
+@layer base {
+  * {
+    @apply border-foreground;
+  }
+  select option {
+  color: black;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply py-2 px-4 text-center rounded-md no-underline bg-btn-background hover:bg-btn-background-hover text-lg font-semibold hover:shadow-md hover:shadow-foreground;
+  }
+  .btn-submit {
+    @apply py-2 px-4 text-center rounded-md no-underline bg-hover text-lg font-semibold  hover:shadow-md hover:shadow-foreground;
+  }
+  .btn-cancel {
+    @apply py-2 px-4 text-center rounded-md no-underline bg-cancel hover:bg-cancel-hover text-lg font-semibold hover:shadow-md hover:shadow-foreground;
+  }
+  .title {
+    @apply mb-4 text-xl font-bold text-center text-highlight
+  }
+  .close-modal-btn {
+    @apply bg-cancel hover:bg-cancel-hover h-10 w-12 flex items-center justify-center relative mb-4 rounded-lg left-full right-full -mt-10;
+  }
+  .show-modal {
+    @apply fixed z-10 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-background p-16 h-4/5 rounded-lg overflow-y-auto w-4/5 md:w-1/2;
+  }
+}
+
+td, th {
+  padding: 8px;
+}
+tr {
+  border: 2px solid var(--foreground);
+}
+
+/* * MARK: React-datepicker styles */
+
+.react-datepicker__day {
+  background-color: rgb(69, 151, 69);
+  color: #000;
+}
+
+.react-datepicker__day--selected {
+  background-color: #1e40af;
+  color: #fff;
+}
+
+.react-datepicker__day--disabled {
+  color: rgba(90, 90, 90, 0.803);
+  background-color: rgba(255, 255, 255, 0.803);
+}
+.react-datepicker__day:hover {
+  background-color: rgb(140, 194, 140);
+  color: #000;
+}
+.react-datepicker__day--disabled:hover {
+  background-color: rgb(255, 255, 255);
+  color: #000;
+}
+
+.react-datepicker__day--excluded {
+  color: white;
+  background-color: rgba(220, 38, 38, 0.90);
+}
+
+.react-datepicker__day--excluded:hover {
+  background-color: rgba(246, 137, 137, 0.803);
+}
+
+.fullDay {
+  background-color: rgb(224, 62, 62);
+  color: white;
+}
+
+.fullDay:hover {
+  background-color: rgba(246, 137, 137, 0.803);
+}
+
+.reserved {
+  background-color: rgb(226, 163, 54);
+}
+
+.reserved:hover {
+  background-color: rgb(220, 180, 111);
+}
+
+/* * MARK: Media-Queries */
+
+@media (min-width: 768px) {
+  .react-datepicker {
+    height: 400px;
+    width: 400px;
+    font-size: 1rem;
+  }
+  .react-datepicker__header {
+    width: 100%;
+    height: 15%;
+  }
+  .react-datepicker__month {
+    height: 80%;
+  }
+}
+
+/* * MARK: KeyFrames */
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+    visibility: hidden; /* Caché au début */
+  }
+  10% {
+    visibility: visible; /* Visible dès que l'animation commence */
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+  }
+}
+
+.animate-slide-in-1 {
+  animation: slideInFromRight ease forwards 1.5s;
+}
+
+.animate-slide-in-2 {
+  animation: slideInFromRight ease forwards 2.2s;
+}
+
+.animate-slide-in-3 {
+  animation: slideInFromRight ease forwards 3s;
+}
